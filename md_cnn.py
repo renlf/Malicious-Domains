@@ -80,7 +80,8 @@ def md_cnn():
     (X_test, y_test) = md_encode('dn_test', test_count)
 
     model = Sequential()
-    model.add(Convolution1D(nb_filter=4, filter_length=4, border_mode='same', activation='tanh', subsample_length=1, input_shape=(shape_len, len(char_array))))#
+    model.add(Convolution1D(nb_filter=4, filter_length=2, border_mode='same', activation='tanh', subsample_length=1, input_shape=(shape_len, len(char_array))))#
+    model.add(MaxPooling1D(pool_length=2))
     model.add(Convolution1D(nb_filter=4, filter_length=2, border_mode='same', activation='tanh', subsample_length=1))
     model.add(MaxPooling1D(pool_length=2))
     model.add(Convolution1D(nb_filter=4, filter_length=2, border_mode='same', activation='tanh', subsample_length=1))
@@ -92,17 +93,17 @@ def md_cnn():
     model.add(Dropout(0.25))
     model.add(Activation('tanh'))
 
-    model.add(Dense(64))
+    model.add(Dense(256))
     model.add(Dropout(0.25))
     model.add(Activation('tanh'))
 
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
 
-    sgd = SGD(l2=0.0, lr=0.05, decay=1e-2, momentum=0.9)
+    sgd = SGD(l2=0.0, lr=0.05, decay=1e-6, momentum=0.9)
     model.compile(loss='categorical_crossentropy', optimizer=sgd, class_mode='categorical')
 
-    model.fit(X_train,y_train, batch_size=128, nb_epoch=3, shuffle=True, show_accuracy=True, validation_split=0.2)
+    model.fit(X_train,y_train, batch_size=128, nb_epoch=10, shuffle=True, show_accuracy=True, validation_data=(X_test,y_test)) #validation_split=0.2)
 
 
 #alexa_parser('top.csv')
