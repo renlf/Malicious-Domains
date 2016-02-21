@@ -83,7 +83,7 @@ def md_cnn():
     model.add(MaxPooling1D(pool_length=2))
     model.add(Convolution1D(nb_filter=8, filter_length=2, border_mode='same', activation='tanh', subsample_length=1))
     model.add(MaxPooling1D(pool_length=2))
-#    model.add(Convolution1D(nb_filter=4, filter_length=2, border_mode='same', activation='tanh', subsample_length=1))
+#    model.add(Convolution1D(nb_filter=3, filter_length=3, border_mode='same', activation='tanh', subsample_length=1))
 #    model.add(MaxPooling1D(pool_length=2))
 
     model.add(Flatten())
@@ -93,7 +93,7 @@ def md_cnn():
     model.add(Activation('tanh'))
 
     model.add(Dense(256))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.15))
     model.add(Activation('tanh'))
 
     model.add(Dense(1))
