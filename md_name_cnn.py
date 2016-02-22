@@ -5,6 +5,8 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import  Convolution1D, MaxPooling1D
 from keras.optimizers import SGD
+from keras.callbacks import EarlyStopping
+import theano
 
 char_array = [ch for ch in string.ascii_lowercase]
 num_array = [str(x) for x in range(0, 10)]
@@ -80,9 +82,9 @@ def md_cnn():
 
     model = Sequential()
     model.add(Convolution1D(nb_filter=4, filter_length=2, border_mode='same', activation='tanh', subsample_length=1, input_shape=(shape_len, len(char_array))))#
-    model.add(MaxPooling1D(pool_length=2))
-    model.add(Convolution1D(nb_filter=8, filter_length=2, border_mode='same', activation='tanh', subsample_length=1))
-    model.add(MaxPooling1D(pool_length=2))
+#    model.add(MaxPooling1D(pool_length=2))
+#    model.add(Convolution1D(nb_filter=8, filter_length=2, border_mode='same', activation='tanh', subsample_length=1))
+#    model.add(MaxPooling1D(pool_length=2))
 #    model.add(Convolution1D(nb_filter=3, filter_length=3, border_mode='same', activation='tanh', subsample_length=1))
 #    model.add(MaxPooling1D(pool_length=2))
 
@@ -99,11 +101,17 @@ def md_cnn():
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
 
-    sgd = SGD(l2=0.0, lr=0.05, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(l2=0.0, lr=0.05, decay=1e-6, momentum=0.99, nesterov=True)
     model.compile(loss='binary_crossentropy', optimizer=sgd, class_mode='binary')
 
-    model.fit(X_train,y_train, batch_size=128, nb_epoch=256, show_accuracy=True, validation_data=(X_test,y_test)) #validation_split=0.2)
+    get_2nd_layer_output = theano.function([model.layers[0].input], model.layers[2].get_output(train=False))
+    layer_output = get_2nd_layer_output(X_train)
 
+    early_stopping = EarlyStopping(monitor='val_loss', patience=10)
+    hist = model.fit(X_train,y_train, batch_size=128, nb_epoch=256, show_accuracy=True, validation_data=(X_test,y_test))#, callbacks=[early_stopping]) #validation_split=0.2)
+
+ #   print hist.history
+ #   print layer_output
 
 #alexa_parser('top.csv')
 one_hot_encoder()
