@@ -81,10 +81,10 @@ def md_cnn():
     (X_test, y_test) = md_encode('dn_test', test_count)
 
     model = Sequential()
-    model.add(Convolution1D(nb_filter=4, filter_length=2, border_mode='same', activation='tanh', subsample_length=1, input_shape=(shape_len, len(char_array))))#
-#    model.add(MaxPooling1D(pool_length=2))
-#    model.add(Convolution1D(nb_filter=8, filter_length=2, border_mode='same', activation='tanh', subsample_length=1))
-#    model.add(MaxPooling1D(pool_length=2))
+    model.add(Convolution1D(nb_filter=128, filter_length=2, border_mode='same', activation='tanh', subsample_length=1, input_shape=(shape_len, len(char_array))))#
+    model.add(MaxPooling1D(pool_length=2))
+    model.add(Convolution1D(nb_filter=128, filter_length=4, border_mode='same', activation='tanh', subsample_length=1))
+    model.add(MaxPooling1D(pool_length=2))
 #    model.add(Convolution1D(nb_filter=3, filter_length=3, border_mode='same', activation='tanh', subsample_length=1))
 #    model.add(MaxPooling1D(pool_length=2))
 
